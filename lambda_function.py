@@ -19,7 +19,6 @@ def on_intent(request):
 		if request['dialogState'] == "STARTED" or request['dialogState'] == "IN_PROGRESS":
 			return dialog_response(request['dialogState'], False)
 
-
 	if intent_name == "AMAZON.HelpIntent":
 		return do_help()
 	elif intent_name == "AMAZON.StopIntent":
@@ -72,6 +71,9 @@ def do_stop():
 			"Is there anything I can do for you?"
 		)
 
+
+
+# ************  Responses  *************** #
 
 def dialog_response(attributes, endsession):
 
@@ -135,7 +137,7 @@ def response_card(output, endsession, attributes, title, cardContent, repromt = 
 	}
 
 
-def dialog_elicit_slot(output):
+def dialog_elicit_slot(output, intent_name, slotToElicit):
 	print output, "\n"
 	return {
 		"version": "1.0",
@@ -150,9 +152,9 @@ def dialog_elicit_slot(output):
 			"directives": [
 				{
 					"type": "Dialog.ElicitSlot",
-					"slotToElicit": "MULTIPLEX",
+					"slotToElicit": slotToElicit,
 					"updatedIntent": {
-						"name": "GetMovieDetails",
+						"name": intent_name,
 						"confirmationStatus": "NONE",
 					}
 				}
