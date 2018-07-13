@@ -10,7 +10,7 @@ def lambda_handler(event, context):
 
 def on_launch(event, context):
 	welcomeMessage = getWelcomeMessage()
-	return response_card(welcomeMessage, False, {}, "Welcome", welcomeMessage, "How can I help you?")
+	return response_card(welcomeMessage, "Welcome", welcomeMessage)
 
 
 def on_intent(request):
@@ -70,11 +70,8 @@ def do_stop():
 	# TODO: Improve this
 	return response_card(
 			getRandom(Messages),
-			True,
-			{},
 			"TATA",
-			"We hope to see you again.",
-			"Is there anything I can do for you?"
+			"We hope to see you again."
 		)
 def getRandom(Messages):
 	return Messages[random.randint(0, len(Messages) - 1)]
