@@ -1,3 +1,5 @@
+import random
+
 def lambda_handler(event, context):
 	if event['request']['type'] == "LaunchRequest":
 		return on_launch(event, context)
@@ -15,9 +17,12 @@ def on_intent(request):
 	intent = request['intent']
 	intent_name = request['intent']['name']
 
+	'''
+	# Only Required if you're using Dialog.Directives
 	if 'dialogState' in request:
 		if request['dialogState'] == "STARTED" or request['dialogState'] == "IN_PROGRESS":
 			return dialog_response(request['dialogState'], False)
+	'''
 
 	if intent_name == "AMAZON.HelpIntent":
 		return do_help()
@@ -28,6 +33,7 @@ def on_intent(request):
 	else:
 		print ("Invalid Intent reply with help")
 		do_help()
+
 
 def getSlotValue(intent, slot):
 	if 'slots' in intent:
@@ -70,13 +76,13 @@ def do_stop():
 			"We hope to see you again.",
 			"Is there anything I can do for you?"
 		)
-
+def getRandom(Messages):
+	return Messages[random.randint(0, len(Messages) - 1)]
 
 
 # ************  Responses  *************** #
 
 def dialog_response(attributes, endsession):
-
 	return {
 		'version': '1.0',
 		'sessionAttributes': attributes,
@@ -90,7 +96,7 @@ def dialog_response(attributes, endsession):
 		}
 	}
 
-def response_plain_text(output, shouldEndSession, attributes) : 
+def response_plain_text(output, shouldEndSession = True, attributes = {}) : 
 	print("\n")
 	print(output)
 	print("\n")
@@ -98,7 +104,7 @@ def response_plain_text(output, shouldEndSession, attributes) :
 	return {
 		'version'   : '1.0',
 		'response'  : {
-			'shouldEndSession'  : endsession,
+			'shouldEndSession'  : shouldEndSession,
 			'outputSpeech'  : {
 				'type'      : 'PlainText',
 				'text'      : output
@@ -108,15 +114,16 @@ def response_plain_text(output, shouldEndSession, attributes) :
 	}
 
 
-def response_card(output, endsession, attributes, title, cardContent, repromt = ""):
+def response_card(output, title, cardContent, shouldEndSession = True, attributes = {}, repromt = "What can I do for you?"):
 	print("\n")
-	print(output)
+	print "Output:", output
+	print "Title:", title
+	print "CardContent:", cardContent
 	print("\n")
-	""" create a simple json plain text response  """
 	return {
 		'version'   : '1.0',
 		'response'  : {
-			'shouldEndSession'  : endsession,
+			'shouldEndSession'  : shouldEndSession,
 			'outputSpeech'  : {
 				'type'      : 'PlainText',
 				'text'      : output
